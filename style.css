@@ -1,0 +1,126 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  background: #1c4a70;
+  font-family: -apple-system, "PingFang SC", "Helvetica Neue", system-ui, sans-serif;
+  -webkit-user-select: none; user-select: none;
+  touch-action: none;
+}
+
+#game { display: block; width: 100vw; height: 100vh; }
+
+.hidden { display: none !important; }
+
+/* ---------- HUD ---------- */
+#hud {
+  position: fixed; top: 14px; left: 16px; right: 16px;
+  display: flex; align-items: center; gap: 26px;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0,0,0,.5);
+  pointer-events: none;
+}
+.hud-item { display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+.label { font-size: 13px; opacity: .85; }
+.value { font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+#mute {
+  margin-left: auto;
+  font-size: 20px;
+  cursor: pointer;
+  pointer-events: auto;
+  opacity: .8;
+}
+
+#hpbar {
+  width: 160px; height: 14px;
+  background: rgba(0,0,0,.45);
+  border: 2px solid rgba(255,255,255,.7);
+  border-radius: 8px;
+  overflow: hidden;
+}
+#hpfill {
+  height: 100%; width: 100%;
+  background: linear-gradient(90deg, #e74c3c, #f1c40f 45%, #2ecc71 75%);
+  background-size: 160px 100%;
+  background-position: right;
+  transition: width .15s ease-out;
+}
+#hpbar.hit { animation: hpflash .35s; }
+@keyframes hpflash {
+  0%, 100% { border-color: rgba(255,255,255,.7); }
+  50% { border-color: #ff5040; box-shadow: 0 0 12px #ff5040; }
+}
+#hpbar.heal { animation: hpheal .5s; }
+@keyframes hpheal {
+  0%, 100% { border-color: rgba(255,255,255,.7); }
+  50% { border-color: #4be08a; box-shadow: 0 0 14px #4be08a; }
+}
+
+/* ---------- 屏幕划桨按钮 ---------- */
+#controls { pointer-events: none; }
+.ctl-group {
+  position: fixed; bottom: 18px;
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  pointer-events: none;
+}
+.ctl-left { left: 18px; }
+.ctl-right { right: 18px; }
+.ctl {
+  width: 58px; height: 58px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.14);
+  border: 2px solid rgba(255,255,255,.45);
+  color: #fff;
+  font-size: 24px;
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: auto;
+  cursor: pointer;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.ctl:active { background: rgba(255,255,255,.4); }
+.ctl-label {
+  color: rgba(255,255,255,.85);
+  font-size: 12px;
+  text-shadow: 0 1px 3px rgba(0,0,0,.5);
+}
+
+/* ---------- 覆盖层 ---------- */
+.overlay {
+  position: fixed; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 14px;
+  background: rgba(8, 30, 50, .55);
+  color: #fff;
+  text-align: center;
+  text-shadow: 0 2px 6px rgba(0,0,0,.6);
+}
+.overlay h1 { font-size: 52px; letter-spacing: 6px; }
+.overlay .sub { font-size: 18px; opacity: .8; letter-spacing: 3px; margin-top: -8px; }
+.instructions {
+  margin: 14px 0;
+  padding: 18px 30px;
+  background: rgba(0,0,0,.35);
+  border-radius: 14px;
+  line-height: 2;
+  font-size: 15px;
+  max-width: 92vw;
+}
+.instructions b { color: #ffd35c; }
+.overlay .big { font-size: 30px; font-weight: 700; }
+.overlay .big span { color: #ffd35c; }
+.overlay .record { font-size: 17px; opacity: .9; }
+.overlay .record span { color: #7ee0a3; font-weight: 700; }
+.prompt { font-size: 16px; opacity: .9; animation: blink 1.4s infinite; }
+@keyframes blink { 0%,100% { opacity: .9; } 50% { opacity: .35; } }
+
+@media (max-width: 600px) {
+  .overlay h1 { font-size: 36px; }
+  .instructions { font-size: 13px; padding: 12px 18px; line-height: 1.9; }
+  #hpbar { width: 110px; }
+  #hud { gap: 14px; }
+  .ctl { width: 52px; height: 52px; }
+}
