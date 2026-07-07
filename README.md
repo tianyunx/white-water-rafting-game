@@ -14,6 +14,7 @@ Zero dependencies, no build step — plain HTML5 Canvas + vanilla JavaScript. Ju
 | `→` / `D` | Right oars forward stroke (bow turns left) |
 | `Z` | Left oars back-paddle (turns left + reverses) |
 | `X` | Right oars back-paddle |
+| `ESC` | Pause / resume (or tap the ⏸ button) |
 | `M` | Mute |
 | Space | Start / restart |
 
@@ -26,7 +27,8 @@ Alternate left/right to go straight and fast; back-paddle plus opposite forward 
 - Lilies and reeds are harmless but drag the raft noticeably
 - The current genuinely pushes the boat: faster mid-river, slower near banks, accelerating in narrow channels, and whirlpools spin you around — the flow you see is the flow you feel (physics and rendering share one flow-field function)
 - Difficulty ramps with distance: narrower river, faster current, more rocks
-- Best distance is saved in localStorage
+- The HUD tracks distance, speed, rocks smashed, and your all-time best — the best-record counter turns gold and follows you live the moment you surpass it
+- Best distance is saved in localStorage (per browser/device)
 
 ## Tech notes
 
@@ -53,6 +55,7 @@ Alternate left/right to go straight and fast; back-paddle plus opposite forward 
 | `→` / `D` | 右侧三桨前划（船头向左偏） |
 | `Z` | 左桨后划（船头向左偏 + 倒退） |
 | `X` | 右桨后划 |
+| `ESC` | 暂停 / 继续（也可点 ⏸ 按钮） |
 | `M` | 静音 |
 | 空格 | 开始 / 重开 |
 
@@ -65,7 +68,8 @@ Alternate left/right to go straight and fast; back-paddle plus opposite forward 
 - 荷叶、芦苇不造成伤害，但会明显拖慢船
 - 水流会真实地影响船：河心快、近岸慢、窄道加速、漩涡拽着船打转——看到的水流方向就是船受力的方向（物理和渲染共用同一个流场函数）
 - 难度随距离上升：河道变窄、水流变急、石头变多
-- 最佳纪录保存在浏览器 localStorage
+- HUD 实时显示距离、速度、击碎石头数和历史最高纪录——一旦超越纪录，"最高"数字会变金色并实时跟涨
+- 最佳纪录保存在浏览器 localStorage（每个浏览器/设备各自独立）
 
 ## 技术要点
 
