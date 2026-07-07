@@ -10,10 +10,14 @@
   const distEl = document.getElementById('dist');
   const speedEl = document.getElementById('speed');
   const muteEl = document.getElementById('mute');
+  const pauseEl = document.getElementById('pause');
+  const rockCountEl = document.getElementById('rockCount');
   const menuEl = document.getElementById('menu');
   const overEl = document.getElementById('over');
+  const pauseOverlayEl = document.getElementById('pauseOverlay');
   const controlsEl = document.getElementById('controls');
   const finalDistEl = document.getElementById('finalDist');
+  const finalRocksEl = document.getElementById('finalRocks');
   const bestDistEl = document.getElementById('bestDist');
 
   const PX_PER_M = 30;
@@ -30,7 +34,9 @@
       overTitle: 'The raft fell apart!',
       overDist: 'You rafted', best: 'Best record',
       retryPrompt: 'Press Space or tap to retry',
-      muteTitle: 'Mute (M)',
+      muteTitle: 'Mute (M)', pauseTitle: 'Pause (ESC)',
+      rocks: 'Rocks', rocksBroken: 'Rocks smashed',
+      pausedTitle: 'Paused', resumePrompt: 'Press ESC or tap to resume',
       langBtn: '中文',
       instructions: [
         '<p><b>← / A</b> left oars forward&ensp;<b>Z</b> left oars backward</p>',
@@ -50,7 +56,9 @@
       overTitle: '木筏散架了！',
       overDist: '本次漂流', best: '最佳纪录',
       retryPrompt: '按 空格 或 点击屏幕 再来一次',
-      muteTitle: '静音 (M)',
+      muteTitle: '静音 (M)', pauseTitle: '暂停 (ESC)',
+      rocks: '碎石', rocksBroken: '击碎石头',
+      pausedTitle: '已暂停', resumePrompt: '按 ESC 或点击屏幕 继续',
       langBtn: 'English',
       instructions: [
         '<p><b>← / A</b> 左桨前划　<b>Z</b> 左桨后划</p>',
@@ -75,12 +83,14 @@
     const lb = document.getElementById('langBtn');
     if (lb) lb.textContent = t.langBtn;
     if (muteEl) muteEl.title = t.muteTitle;
+    if (pauseEl) pauseEl.title = t.pauseTitle;
     document.documentElement.lang = lang;
   }
 
-  let state = 'menu'; // menu | playing | over
+  let state = 'menu'; // menu | playing | paused | over
   let last = performance.now();
   let shake = 0, flash = 0;
+  let rocksBroken = 0;
   let dpr = 1;
   const view = { w: 0, h: 0, camX: 0, camY: 0, shakeX: 0, shakeY: 0, flash: 0, time: 0 };
 
@@ -108,6 +118,8 @@
 
   Boat.onBulletHit = (x, y, kind) => {
     if (kind === 'break') {
+      rocksBroken++;
+      rockCountEl.textContent = String(rocksBroken);
       Render.burst(x, y, 'rock');
       Sound.crack();
     } else {
@@ -141,12 +153,26 @@
   function newGame() {
     setupWorld((Math.random() * 0x7fffffff) | 0);
     shake = 0; flash = 0;
+    rocksBroken = 0;
+    rockCountEl.textContent = '0';
     state = 'playing';
     menuEl.classList.add('hidden');
     overEl.classList.add('hidden');
+    pauseOverlayEl.classList.add('hidden');
     hudEl.classList.remove('hidden');
     controlsEl.classList.remove('hidden');
     updateHUD();
+  }
+
+  function togglePause() {
+    if (state === 'playing') {
+      state = 'paused';
+      pauseOverlayEl.classList.remove('hidden');
+    } else if (state === 'paused') {
+      state = 'playing';
+      pauseOverlayEl.classList.add('hidden');
+      last = performance.now(); // 避免恢复时吃进一大帧 dt
+    }
   }
 
   function gameOver() {
@@ -155,6 +181,7 @@
     const best = Math.max(meters, parseInt(localStorage.getItem(BEST_KEY) || '0', 10));
     localStorage.setItem(BEST_KEY, String(best));
     finalDistEl.textContent = String(meters);
+    finalRocksEl.textContent = String(rocksBroken);
     bestDistEl.textContent = String(best);
     overEl.classList.remove('hidden');
     controlsEl.classList.add('hidden');
@@ -188,9 +215,14 @@
       case 'KeyM':
         if (!e.repeat) muteEl.textContent = Sound.toggleMute() ? '🔇' : '🔊';
         break;
+      case 'Escape':
+        if (!e.repeat && (state === 'playing' || state === 'paused')) togglePause();
+        break;
       case 'Space':
         e.preventDefault();
-        if (!e.repeat && state !== 'playing') newGame();
+        if (e.repeat) break;
+        if (state === 'paused') togglePause();
+        else if (state !== 'playing') newGame();
         break;
     }
   });
@@ -212,6 +244,11 @@
     muteEl.textContent = Sound.toggleMute() ? '🔇' : '🔊';
   });
 
+  pauseEl.addEventListener('pointerdown', (e) => {
+    e.stopPropagation();
+    togglePause();
+  });
+
   // 语言切换（阻止冒泡，避免触发"点击开始"）
   const langBtnEl = document.getElementById('langBtn');
   if (langBtnEl) {
@@ -223,15 +260,17 @@
     });
   }
 
-  // 空白处点击：开始 / 重开（游戏中划桨请用按钮或键盘）
+  // 空白处点击：暂停中→继续；菜单/结束→开始（游戏中划桨请用按钮或键盘）
   window.addEventListener('pointerdown', () => {
-    if (state !== 'playing') newGame();
+    if (state === 'paused') togglePause();
+    else if (state !== 'playing') newGame();
   });
 
   /* ---------- 主循环 ---------- */
   function loop(now) {
-    const dt = Math.min(0.033, Math.max(0.001, (now - last) / 1000));
+    let dt = Math.min(0.033, Math.max(0.001, (now - last) / 1000));
     last = now;
+    if (state === 'paused') dt = 0; // 暂停：画面完全冻结（仍在渲染，遮罩之下静止）
     view.time += dt;
 
     if (state === 'playing') {

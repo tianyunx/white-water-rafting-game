@@ -17,6 +17,7 @@ html, body {
 #hud {
   position: fixed; top: 14px; left: 16px; right: 16px;
   display: flex; align-items: center; gap: 26px;
+  flex-wrap: wrap; row-gap: 6px;
   color: #fff;
   text-shadow: 0 1px 3px rgba(0,0,0,.5);
   pointer-events: none;
@@ -25,13 +26,13 @@ html, body {
 .label { font-size: 13px; opacity: .85; }
 .value { font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums; }
 
-#mute {
-  margin-left: auto;
+#pause, #mute {
   font-size: 20px;
   cursor: pointer;
   pointer-events: auto;
   opacity: .8;
 }
+#pause { margin-left: auto; }
 
 #hpbar {
   width: 160px; height: 14px;

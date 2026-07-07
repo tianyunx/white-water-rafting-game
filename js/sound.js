@@ -44,24 +44,37 @@ const Sound = (() => {
     o.start(t); o.stop(t + dur);
   }
 
-  // 划水声：柔和起音的低通噪声"哗——"（滤波频率下扫模拟水流散开）+ 很轻的入水"扑通"
+  // 划水声：清亮愉悦的水滴"啵咚"（正弦音快速上滑，像雨滴落进水面）
+  // + 一层很轻、柔和起音的低通水波声垫底
   function splash() {
     const a = ctx(); if (!a) return;
     const t = a.currentTime;
+
+    // 主体"啵咚"：音高随机，让连续划桨像一串泉水声
+    const base = 240 + Math.random() * 140;
+    const o = a.createOscillator();
+    o.type = 'sine';
+    o.frequency.setValueAtTime(base, t);
+    o.frequency.exponentialRampToValueAtTime(base * 2.5, t + 0.11);
+    const g = a.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(0.3, t + 0.012);
+    g.gain.exponentialRampToValueAtTime(0.001, t + 0.17);
+    o.connect(g); g.connect(a.destination);
+    o.start(t); o.stop(t + 0.18);
+
+    // 水波垫底：极轻的低通噪声，缓起缓落
     const src = a.createBufferSource();
     src.buffer = noiseBuf; src.loop = true;
     const f = a.createBiquadFilter();
-    f.type = 'lowpass'; f.Q.value = 1.2;
-    f.frequency.setValueAtTime(1600 + Math.random() * 600, t);
-    f.frequency.exponentialRampToValueAtTime(350, t + 0.4);
-    const g = a.createGain();
-    g.gain.setValueAtTime(0.0001, t);
-    g.gain.exponentialRampToValueAtTime(0.4, t + 0.05); // 缓起音，去掉"咔哒"感
-    g.gain.exponentialRampToValueAtTime(0.001, t + 0.42);
-    src.connect(f); f.connect(g); g.connect(a.destination);
-    src.start(t, Math.random() * 0.3); // 随机起点，每桨声音略有不同
-    src.stop(t + 0.45);
-    tone(190 + Math.random() * 50, 0.13, 0.1, 'sine', 0, 80);
+    f.type = 'lowpass'; f.frequency.value = 750; f.Q.value = 0.5;
+    const g2 = a.createGain();
+    g2.gain.setValueAtTime(0.0001, t);
+    g2.gain.exponentialRampToValueAtTime(0.09, t + 0.05);
+    g2.gain.exponentialRampToValueAtTime(0.001, t + 0.28);
+    src.connect(f); f.connect(g2); g2.connect(a.destination);
+    src.start(t, Math.random() * 0.3);
+    src.stop(t + 0.3);
   }
 
   return {

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 <title>激流勇进 · White Water Rafting</title>
-<link rel="stylesheet" href="style.css?v=2">
+<link rel="stylesheet" href="style.css?v=3">
 </head>
 <body>
 <canvas id="game"></canvas>
@@ -16,6 +16,8 @@
   </div>
   <div class="hud-item"><span class="label" data-t="dist">Distance</span><span id="dist" class="value">0 m</span></div>
   <div class="hud-item"><span class="label" data-t="speed">Speed</span><span id="speed" class="value">0.0 m/s</span></div>
+  <div class="hud-item"><span class="label" data-t="rocks">Rocks</span><span id="rockCount" class="value">0</span></div>
+  <span id="pause" title="Pause (ESC)">⏸</span>
   <span id="mute" title="Mute (M)">🔊</span>
 </div>
 
@@ -43,15 +45,21 @@
 <div id="over" class="overlay hidden">
   <h1 data-t="overTitle">The raft fell apart!</h1>
   <p class="big"><span data-t="overDist">You rafted</span> <span id="finalDist">0</span> m</p>
+  <p class="record"><span data-t="rocksBroken">Rocks smashed</span> <span id="finalRocks">0</span></p>
   <p class="record"><span data-t="best">Best record</span> <span id="bestDist">0</span> m</p>
   <p class="prompt" data-t="retryPrompt">Press Space or tap to retry</p>
 </div>
 
+<div id="pauseOverlay" class="overlay hidden">
+  <h1 data-t="pausedTitle">Paused</h1>
+  <p class="prompt" data-t="resumePrompt">Press ESC or tap to resume</p>
+</div>
+
 <!-- ?v= 版本号与 HTML 一起提交更新，保证浏览器不会拿旧缓存的 JS 配新 HTML -->
-<script src="js/sound.js?v=2"></script>
-<script src="js/river.js?v=2"></script>
-<script src="js/boat.js?v=2"></script>
-<script src="js/render.js?v=2"></script>
-<script src="js/main.js?v=2"></script>
+<script src="js/sound.js?v=3"></script>
+<script src="js/river.js?v=3"></script>
+<script src="js/boat.js?v=3"></script>
+<script src="js/render.js?v=3"></script>
+<script src="js/main.js?v=3"></script>
 </body>
 </html>
