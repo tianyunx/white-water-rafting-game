@@ -1,10 +1,49 @@
-# 激流勇进 · White Water Rafting
+# White Water Rafting · 激流勇进
+
+A pure-frontend whitewater rafting game: steer a six-oar raft with two-key paddling down an endlessly generated river — dodge rocks (or blast them with the bow cannon), ride the rapids, escape whirlpools, and pick your channel at river forks. See how far you can get.
+
+**Play online: https://tianyunx.github.io/white-water-rafting-game/**
+
+Zero dependencies, no build step — plain HTML5 Canvas + vanilla JavaScript. Just open `index.html` and play. The UI is available in English and 中文 (toggle button on the title screen).
+
+## Controls
+
+| Key | Action |
+|------|--------|
+| `←` / `A` | Left oars forward stroke (bow turns right) |
+| `→` / `D` | Right oars forward stroke (bow turns left) |
+| `Z` | Left oars back-paddle (turns left + reverses) |
+| `X` | Right oars back-paddle |
+| `M` | Mute |
+| Space | Start / restart |
+
+Alternate left/right to go straight and fast; back-paddle plus opposite forward stroke pivots on the spot. On touch devices, use the on-screen buttons in the bottom corners.
+
+## Gameplay
+
+- The bow cannon fires automatically: aim by steering — rocks crack after a few hits (bigger = tougher), and shooting a floating crate collects it remotely
+- Hitting rocks damages the hull based on impact speed; when it reaches zero the raft falls apart. Banks and islands only slow you down
+- Lilies and reeds are harmless but drag the raft noticeably
+- The current genuinely pushes the boat: faster mid-river, slower near banks, accelerating in narrow channels, and whirlpools spin you around — the flow you see is the flow you feel (physics and rendering share one flow-field function)
+- Difficulty ramps with distance: narrower river, faster current, more rocks
+- Best distance is saved in localStorage
+
+## Tech notes
+
+- `js/river.js` — chunked infinite procedural river: sine-blend centerline, reproducible seeded randomness (mulberry32), rock layouts guaranteed to leave a passable channel, mid-river island forks, and the shared flow field `flowAt(x, y)`
+- `js/boat.js` — boat physics: stroke impulses, anisotropic drag relative to the water, natural rotation from bow/stern flow difference, collisions and hull damage; all feel-tuning constants live in the `C` object at the top
+- `js/render.js` — fully procedural Canvas drawing, no image assets
+- `js/sound.js` — WebAudio-synthesized sound effects, no audio files
+
+---
+
+# 中文说明
 
 一个纯前端的白水漂流小游戏：两键划桨控制一艘六桨木筏，在程序化生成的无限河道里顺流而下，躲开（或者用船头机炮打碎）石头，穿过急流、漩涡和河道分岔，看你能漂多远。
 
 **在线试玩：https://tianyunx.github.io/white-water-rafting-game/**
 
-无任何依赖、无构建步骤——纯 HTML5 Canvas + 原生 JavaScript，双击 `index.html` 即可游玩。
+无任何依赖、无构建步骤——纯 HTML5 Canvas + 原生 JavaScript，双击 `index.html` 即可游玩。界面支持中英文切换（标题画面右上角按钮）。
 
 ## 操作
 

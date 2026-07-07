@@ -18,6 +18,61 @@
 
   const PX_PER_M = 30;
   const BEST_KEY = 'rafting-best';
+  const LANG_KEY = 'rafting-lang';
+
+  /* ---------- 中英双语 ---------- */
+  const I18N = {
+    en: {
+      title: 'White Water Rafting', sub: '激流勇进',
+      hull: 'Hull', dist: 'Distance', speed: 'Speed',
+      leftOars: 'Left', rightOars: 'Right',
+      startPrompt: 'Press Space or tap anywhere to start',
+      overTitle: 'The raft fell apart!',
+      overDist: 'You rafted', best: 'Best record',
+      retryPrompt: 'Press Space or tap to retry',
+      muteTitle: 'Mute (M)',
+      langBtn: '中文',
+      instructions: [
+        '<p><b>← / A</b> left oars forward&ensp;<b>Z</b> left oars backward</p>',
+        '<p><b>→ / D</b> right oars forward&ensp;<b>X</b> right oars backward</p>',
+        '<p>Alternate sides to go straight & fast; paddle one side to turn; back-paddle + opposite forward = pivot on the spot</p>',
+        '<p>Rocks damage the raft; banks only slow you down; lilies & reeds drag you</p>',
+        '<p>The bow cannon fires on its own: crack rocks open, shoot floating crates to collect them</p>',
+        '<p>Red-cross crates repair the raft (+20 hull)</p>',
+        '<p>At river forks pick your channel — narrow is faster but riskier&ensp;<b>M</b> mute</p>',
+      ].join(''),
+    },
+    zh: {
+      title: '激流勇进', sub: 'White Water Rafting',
+      hull: '耐久', dist: '距离', speed: '速度',
+      leftOars: '左桨', rightOars: '右桨',
+      startPrompt: '按 空格 或 点击屏幕 出发',
+      overTitle: '木筏散架了！',
+      overDist: '本次漂流', best: '最佳纪录',
+      retryPrompt: '按 空格 或 点击屏幕 再来一次',
+      muteTitle: '静音 (M)',
+      langBtn: 'English',
+      instructions: [
+        '<p><b>← / A</b> 左桨前划　<b>Z</b> 左桨后划</p>',
+        '<p><b>→ / D</b> 右桨前划　<b>X</b> 右桨后划</p>',
+        '<p>左右交替前划加速；单侧划转向；后划+对侧前划＝原地掉头</p>',
+        '<p>撞石头扣耐久；撞岸只减速；荷叶芦苇会拖慢船</p>',
+        '<p>船头自动开火：对准石头能把它打碎，打中木箱隔空收取</p>',
+        '<p>拾取带红十字的木箱可修船 +20 耐久</p>',
+        '<p>遇到河心岛记得选路——窄道更快也更险　<b>M</b> 静音</p>',
+      ].join(''),
+    },
+  };
+  let lang = localStorage.getItem(LANG_KEY) === 'zh' ? 'zh' : 'en'; // 默认英文
+
+  function applyLang() {
+    const t = I18N[lang];
+    document.querySelectorAll('[data-t]').forEach((el) => { el.textContent = t[el.dataset.t]; });
+    document.getElementById('instructions').innerHTML = t.instructions;
+    document.getElementById('langBtn').textContent = t.langBtn;
+    document.getElementById('mute').title = t.muteTitle;
+    document.documentElement.lang = lang;
+  }
 
   let state = 'menu'; // menu | playing | over
   let last = performance.now();
@@ -153,6 +208,14 @@
     muteEl.textContent = Sound.toggleMute() ? '🔇' : '🔊';
   });
 
+  // 语言切换（阻止冒泡，避免触发"点击开始"）
+  document.getElementById('langBtn').addEventListener('pointerdown', (e) => {
+    e.stopPropagation();
+    lang = lang === 'en' ? 'zh' : 'en';
+    localStorage.setItem(LANG_KEY, lang);
+    applyLang();
+  });
+
   // 空白处点击：开始 / 重开（游戏中划桨请用按钮或键盘）
   window.addEventListener('pointerdown', () => {
     if (state !== 'playing') newGame();
@@ -188,6 +251,7 @@
   }
 
   // 初始场景（菜单背后也有河景）
+  applyLang();
   setupWorld(20260705);
   requestAnimationFrame(loop);
 })();

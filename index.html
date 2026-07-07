@@ -11,47 +11,40 @@
 
 <div id="hud" class="hidden">
   <div class="hud-item">
-    <span class="label">耐久</span>
+    <span class="label" data-t="hull">Hull</span>
     <div id="hpbar"><div id="hpfill"></div></div>
   </div>
-  <div class="hud-item"><span class="label">距离</span><span id="dist" class="value">0 m</span></div>
-  <div class="hud-item"><span class="label">速度</span><span id="speed" class="value">0.0 m/s</span></div>
-  <span id="mute" title="静音 (M)">🔊</span>
+  <div class="hud-item"><span class="label" data-t="dist">Distance</span><span id="dist" class="value">0 m</span></div>
+  <div class="hud-item"><span class="label" data-t="speed">Speed</span><span id="speed" class="value">0.0 m/s</span></div>
+  <span id="mute" title="Mute (M)">🔊</span>
 </div>
 
 <div id="controls" class="hidden">
   <div class="ctl-group ctl-left">
     <div class="ctl" id="btn-lf">⬆</div>
     <div class="ctl" id="btn-lb">⬇</div>
-    <span class="ctl-label">左桨</span>
+    <span class="ctl-label" data-t="leftOars">Left</span>
   </div>
   <div class="ctl-group ctl-right">
     <div class="ctl" id="btn-rf">⬆</div>
     <div class="ctl" id="btn-rb">⬇</div>
-    <span class="ctl-label">右桨</span>
+    <span class="ctl-label" data-t="rightOars">Right</span>
   </div>
 </div>
 
 <div id="menu" class="overlay">
-  <h1>激流勇进</h1>
-  <p class="sub">White Water Rafting</p>
-  <div class="instructions">
-    <p><b>← / A</b> 左桨前划　<b>Z</b> 左桨后划</p>
-    <p><b>→ / D</b> 右桨前划　<b>X</b> 右桨后划</p>
-    <p>左右交替前划加速；单侧划转向；后划+对侧前划＝原地掉头</p>
-    <p>撞石头扣耐久；撞岸只减速；荷叶芦苇会拖慢船</p>
-    <p>船头自动开火：对准石头能把它打碎，打中木箱隔空收取</p>
-    <p>拾取带红十字的木箱可修船 +20 耐久</p>
-    <p>遇到河心岛记得选路——窄道更快也更险　<b>M</b> 静音</p>
-  </div>
-  <p class="prompt">按 空格 或 点击屏幕 出发</p>
+  <div id="langBtn">中文</div>
+  <h1 data-t="title">White Water Rafting</h1>
+  <p class="sub" data-t="sub">激流勇进</p>
+  <div class="instructions" id="instructions"></div>
+  <p class="prompt" data-t="startPrompt">Press Space or tap anywhere to start</p>
 </div>
 
 <div id="over" class="overlay hidden">
-  <h1>木筏散架了！</h1>
-  <p class="big">本次漂流 <span id="finalDist">0</span> m</p>
-  <p class="record">最佳纪录 <span id="bestDist">0</span> m</p>
-  <p class="prompt">按 空格 或 点击屏幕 再来一次</p>
+  <h1 data-t="overTitle">The raft fell apart!</h1>
+  <p class="big"><span data-t="overDist">You rafted</span> <span id="finalDist">0</span> m</p>
+  <p class="record"><span data-t="best">Best record</span> <span id="bestDist">0</span> m</p>
+  <p class="prompt" data-t="retryPrompt">Press Space or tap to retry</p>
 </div>
 
 <script src="js/sound.js"></script>
