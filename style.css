@@ -25,6 +25,7 @@ html, body {
 .hud-item { display: flex; align-items: center; gap: 8px; white-space: nowrap; }
 .label { font-size: 13px; opacity: .85; }
 .value { font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums; }
+#hudBestVal.newrec { color: #ffd35c; text-shadow: 0 0 8px rgba(255,211,92,.7); }
 
 #pause, #mute {
   font-size: 20px;

@@ -12,6 +12,7 @@
   const muteEl = document.getElementById('mute');
   const pauseEl = document.getElementById('pause');
   const rockCountEl = document.getElementById('rockCount');
+  const hudBestValEl = document.getElementById('hudBestVal');
   const menuEl = document.getElementById('menu');
   const overEl = document.getElementById('over');
   const pauseOverlayEl = document.getElementById('pauseOverlay');
@@ -35,7 +36,7 @@
       overDist: 'You rafted', best: 'Best record',
       retryPrompt: 'Press Space or tap to retry',
       muteTitle: 'Mute (M)', pauseTitle: 'Pause (ESC)',
-      rocks: 'Rocks', rocksBroken: 'Rocks smashed',
+      rocks: 'Rocks', rocksBroken: 'Rocks smashed', hudBest: 'Best',
       pausedTitle: 'Paused', resumePrompt: 'Press ESC or tap to resume',
       langBtn: '中文',
       instructions: [
@@ -57,7 +58,7 @@
       overDist: '本次漂流', best: '最佳纪录',
       retryPrompt: '按 空格 或 点击屏幕 再来一次',
       muteTitle: '静音 (M)', pauseTitle: '暂停 (ESC)',
-      rocks: '碎石', rocksBroken: '击碎石头',
+      rocks: '碎石', rocksBroken: '击碎石头', hudBest: '最高',
       pausedTitle: '已暂停', resumePrompt: '按 ESC 或点击屏幕 继续',
       langBtn: 'English',
       instructions: [
@@ -91,6 +92,7 @@
   let last = performance.now();
   let shake = 0, flash = 0;
   let rocksBroken = 0;
+  let bestCache = parseInt(localStorage.getItem(BEST_KEY) || '0', 10);
   let dpr = 1;
   const view = { w: 0, h: 0, camX: 0, camY: 0, shakeX: 0, shakeY: 0, flash: 0, time: 0 };
 
@@ -155,6 +157,9 @@
     shake = 0; flash = 0;
     rocksBroken = 0;
     rockCountEl.textContent = '0';
+    bestCache = parseInt(localStorage.getItem(BEST_KEY) || '0', 10);
+    hudBestValEl.textContent = bestCache + ' m';
+    hudBestValEl.classList.remove('newrec');
     state = 'playing';
     menuEl.classList.add('hidden');
     overEl.classList.add('hidden');
@@ -191,8 +196,13 @@
   function updateHUD() {
     const b = Boat.state;
     hpfillEl.style.width = Math.max(0, b.hp) + '%';
-    distEl.textContent = Math.floor(b.dist / PX_PER_M) + ' m';
+    const meters = Math.floor(b.dist / PX_PER_M);
+    distEl.textContent = meters + ' m';
     speedEl.textContent = (Math.hypot(b.vx, b.vy) / PX_PER_M).toFixed(1) + ' m/s';
+    if (meters > bestCache) { // 正在刷新纪录：实时跟随并亮金色
+      hudBestValEl.textContent = meters + ' m';
+      hudBestValEl.classList.add('newrec');
+    }
   }
 
   /* ---------- 键盘 ---------- */

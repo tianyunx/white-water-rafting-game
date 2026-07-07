@@ -504,12 +504,24 @@ const Render = (() => {
         ctx.lineWidth = 4;
         ctx.beginPath();
         ctx.moveTo(0, 0);
-        ctx.lineTo(s * 27, 0);
+        ctx.lineTo(s * 24, 0);
         ctx.stroke();
+        // 菱形桨叶：两条对称的弧线收出尖头
         ctx.fillStyle = '#8a5f36';
         ctx.beginPath();
-        ctx.ellipse(s * 30, 0, 7, 11, 0, 0, Math.PI * 2);
+        ctx.moveTo(s * 22, 0);
+        ctx.quadraticCurveTo(s * 33, -8, s * 46, 0);
+        ctx.quadraticCurveTo(s * 33, 8, s * 22, 0);
+        ctx.closePath();
         ctx.fill();
+        ctx.strokeStyle = '#6b4a2b';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+        // 叶脊
+        ctx.beginPath();
+        ctx.moveTo(s * 24, 0);
+        ctx.lineTo(s * 42, 0);
+        ctx.stroke();
         ctx.restore();
       }
     }

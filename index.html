@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 <title>激流勇进 · White Water Rafting</title>
-<link rel="stylesheet" href="style.css?v=3">
+<link rel="stylesheet" href="style.css?v=4">
 </head>
 <body>
 <canvas id="game"></canvas>
@@ -17,6 +17,7 @@
   <div class="hud-item"><span class="label" data-t="dist">Distance</span><span id="dist" class="value">0 m</span></div>
   <div class="hud-item"><span class="label" data-t="speed">Speed</span><span id="speed" class="value">0.0 m/s</span></div>
   <div class="hud-item"><span class="label" data-t="rocks">Rocks</span><span id="rockCount" class="value">0</span></div>
+  <div class="hud-item"><span class="label" data-t="hudBest">Best</span><span id="hudBestVal" class="value">0 m</span></div>
   <span id="pause" title="Pause (ESC)">⏸</span>
   <span id="mute" title="Mute (M)">🔊</span>
 </div>
@@ -56,10 +57,10 @@
 </div>
 
 <!-- ?v= 版本号与 HTML 一起提交更新，保证浏览器不会拿旧缓存的 JS 配新 HTML -->
-<script src="js/sound.js?v=3"></script>
-<script src="js/river.js?v=3"></script>
-<script src="js/boat.js?v=3"></script>
-<script src="js/render.js?v=3"></script>
-<script src="js/main.js?v=3"></script>
+<script src="js/sound.js?v=4"></script>
+<script src="js/river.js?v=4"></script>
+<script src="js/boat.js?v=4"></script>
+<script src="js/render.js?v=4"></script>
+<script src="js/main.js?v=4"></script>
 </body>
 </html>
