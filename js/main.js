@@ -67,10 +67,14 @@
 
   function applyLang() {
     const t = I18N[lang];
-    document.querySelectorAll('[data-t]').forEach((el) => { el.textContent = t[el.dataset.t]; });
-    document.getElementById('instructions').innerHTML = t.instructions;
-    document.getElementById('langBtn').textContent = t.langBtn;
-    document.getElementById('mute').title = t.muteTitle;
+    document.querySelectorAll('[data-t]').forEach((el) => {
+      if (t[el.dataset.t] !== undefined) el.textContent = t[el.dataset.t];
+    });
+    const ins = document.getElementById('instructions');
+    if (ins) ins.innerHTML = t.instructions;
+    const lb = document.getElementById('langBtn');
+    if (lb) lb.textContent = t.langBtn;
+    if (muteEl) muteEl.title = t.muteTitle;
     document.documentElement.lang = lang;
   }
 
@@ -209,12 +213,15 @@
   });
 
   // 语言切换（阻止冒泡，避免触发"点击开始"）
-  document.getElementById('langBtn').addEventListener('pointerdown', (e) => {
-    e.stopPropagation();
-    lang = lang === 'en' ? 'zh' : 'en';
-    localStorage.setItem(LANG_KEY, lang);
-    applyLang();
-  });
+  const langBtnEl = document.getElementById('langBtn');
+  if (langBtnEl) {
+    langBtnEl.addEventListener('pointerdown', (e) => {
+      e.stopPropagation();
+      lang = lang === 'en' ? 'zh' : 'en';
+      localStorage.setItem(LANG_KEY, lang);
+      applyLang();
+    });
+  }
 
   // 空白处点击：开始 / 重开（游戏中划桨请用按钮或键盘）
   window.addEventListener('pointerdown', () => {
